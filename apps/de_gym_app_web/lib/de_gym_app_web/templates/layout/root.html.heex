@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= csrf_meta_tag() %>
+    <%= live_title_tag assigns[:page_title] || "DeGymApp", suffix: " · Phoenix Framework" %>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+  </head>
+  <body class="background">
+    <header class="header">
+      <section class="container">
+        <h1 class="logo">De<span class="logo-blue">Gym</span>App</h1>
+      </section>
+      <nav class="header-text">
+        <%= render "_user_menu.html", assigns %>
+        <ul class="nav-flex">
+          <li><%= link "Home", to: Routes.page_path(@conn, :index)%></li>
+          <li><%= link "Employees", to: Routes.employee_path(@conn, :index)%></li>
+          <li><%= link "Clients", to: Routes.client_path(@conn, :index)%></li>
+          <li><%= link "Training plans", to: Routes.trainingplan_path(@conn, :index)%></li>
+          <li><%= link "Exercises", to: Routes.exercise_path(@conn, :index)%></li>
+          <li><%= link "Live", to: "/trainingplans/live" %></li>
+        </ul>
+
+      </nav>
+    </header>
+    <%= @inner_content %>
+    <footer class="container box-opacity">
+      <p class="footer"> © 2023 group-61 </p>
+    </footer>
+  </body>
+</html>

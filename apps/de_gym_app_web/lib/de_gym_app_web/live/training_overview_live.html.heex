@@ -1,0 +1,27 @@
+<main class="container box-opacity">
+  <h1>Listing Trainingplans</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for trainingplan <- @trainingplans do %>
+    <tr>
+      <td><%= trainingplan.name %></td>
+      <td><%= trainingplan.level %></td>
+      <td><%= trainingplan.description %></td>
+
+      <td></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+</main>
+

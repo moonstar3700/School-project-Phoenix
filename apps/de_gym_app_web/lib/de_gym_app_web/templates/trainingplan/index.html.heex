@@ -1,0 +1,30 @@
+<h1>Listing Trainingplans</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for trainingplan <- @trainingplans do %>
+    <tr>
+      <td><%= trainingplan.name %></td>
+      <td><%= trainingplan.level %></td>
+      <td><%= trainingplan.description %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.trainingplan_path(@conn, :show, trainingplan) %></span>
+        <span><%= link "Edit", to: Routes.trainingplan_path(@conn, :edit, trainingplan) %></span>
+        <span><%= link "Delete", to: Routes.trainingplan_path(@conn, :delete, trainingplan), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Trainingplan", to: Routes.trainingplan_path(@conn, :new) %></span>

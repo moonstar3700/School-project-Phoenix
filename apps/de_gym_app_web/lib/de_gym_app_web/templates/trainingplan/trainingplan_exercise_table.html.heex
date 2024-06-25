@@ -1,0 +1,25 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for exercise <- @exercises do %>
+      <tr>
+        <td><%= exercise.name %></td>
+        <td><%= exercise.description %></td>
+        <td>
+          <% if @add do %>
+            <%= link "Remove", to: Routes.training_exercise_path(@conn, :delete, @training, exercise), method: :delete, remote: true %>
+          <% else %>
+            <%= link "Add", to: Routes.training_exercise_path(@conn, :create, @training, exercise), method: :post, remote: true %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+  

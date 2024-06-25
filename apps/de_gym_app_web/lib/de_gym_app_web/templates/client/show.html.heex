@@ -1,0 +1,63 @@
+<h1>Show Client</h1>
+
+<ul>
+
+  <li>
+    <strong>Firstname:</strong>
+    <%= @client.firstname %>
+  </li>
+
+  <li>
+    <strong>Lastname:</strong>
+    <%= @client.lastname %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @client.email %>
+  </li>
+
+  <li>
+    <strong>Phone nr:</strong>
+    <%= @client.phone_nr %>
+  </li>
+
+  <li>
+    <strong>Municipal:</strong>
+    <%= @client.municipal %>
+  </li>
+
+  <li>
+    <strong>Adress:</strong>
+    <%= @client.adress %>
+  </li>
+</ul>
+
+<%= if @client.employee do %>
+  <h2>Personal trainer</h2>
+  <p><strong>Name:</strong> <%= @client.employee.firstname %> <%= @client.employee.lastname %> </p> 
+<% end %>
+
+
+<h2>Training plans</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for training <- @client.trainingplans do%>
+      <tr>
+        <td><%= training.name%></td>
+        <td><%= training.level%></td>
+        <td><%= training.description%></td>
+      </tr>
+    <%= end %>
+  </tbody>
+</table>
+
+<span><%= link "Edit", to: Routes.client_path(@conn, :edit, @client) %></span> |
+<span><%= link "Back", to: Routes.client_path(@conn, :index) %></span>

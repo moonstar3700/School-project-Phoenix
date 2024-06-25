@@ -1,0 +1,46 @@
+<h1>Show Trainingplan</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @trainingplan.name %>
+  </li>
+
+  <li>
+    <strong>Level:</strong>
+    <%= @trainingplan.level %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @trainingplan.description %>
+  </li>
+</ul>
+  <h2>exercises</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>reps</th>
+        <th>Sets</th>
+        <th>Description</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <%= for exercise <- @trainingplan.exercises do%> 
+        <tr>
+          <td><%= exercise.name %></td>
+          <td><%= exercise.reps %></td>
+          <td><%= exercise.sets %></td>
+          <td><%= exercise.description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+
+
+<span><%= link "Edit", to: Routes.trainingplan_path(@conn, :edit, @trainingplan) %></span> |
+<span><%= link "Back", to: Routes.trainingplan_path(@conn, :index) %></span>

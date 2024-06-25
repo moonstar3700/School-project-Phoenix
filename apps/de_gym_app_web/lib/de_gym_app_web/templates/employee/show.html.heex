@@ -1,0 +1,44 @@
+<h1>Show Employee</h1>
+
+<ul>
+
+  <li>
+    <strong>Firstname:</strong>
+    <%= @employee.firstname %>
+  </li>
+
+  <li>
+    <strong>Lastname:</strong>
+    <%= @employee.lastname %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @employee.email %>
+  </li>
+
+</ul>
+<h3>Clients</h3>
+<table>
+  <thead>
+    <tr>
+      <th>
+        name
+      </th>
+      <th>email</th>
+      <th>phone number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for client <- @employee.clients do %>
+            <tr>
+                <td><%= client.firstname %> <%= client.lastname %></td>
+                <td><%= client.email %></td>
+                <td><%= client.phone_nr %></td>
+            </tr>
+         <% end %>
+  </tbody>
+</table>
+
+<span><%= link "Edit", to: Routes.employee_path(@conn, :edit, @employee) %></span> |
+<span><%= link "Back", to: Routes.employee_path(@conn, :index) %></span>

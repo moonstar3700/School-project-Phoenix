@@ -1,0 +1,113 @@
+<%= form_for @changeset, Routes.client_path(@conn, :update, @client), [method: :patch], fn f -> %>
+    <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+    <% end %>
+
+    <%= label f, :firstname %>
+    <%= text_input f, :firstname %>
+    <%= error_tag f, :firstname %>
+  
+    <%= label f, :lastname %>
+    <%= text_input f, :lastname %>
+    <%= error_tag f, :lastname %>
+  
+    <%= label f, :email %>
+    <%= text_input f, :email %>
+    <%= error_tag f, :email %>
+  
+    <%= label f, :phone_nr %>
+    <%= text_input f, :phone_nr %>
+    <%= error_tag f, :phone_nr %>
+  
+    <%= label f, :municipal %>
+    <%= text_input f, :municipal %>
+    <%= error_tag f, :municipal %>
+  
+    <%= label f, :adress %>
+    <%= text_input f, :adress %>
+    <%= error_tag f, :adress %>
+
+    <div>
+        <%= submit "Save" %>
+    </div>
+
+    <h3>Current trainer</h3>
+    <%= if @client.employee do %>
+        <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td><%= @client.employee.firstname %> <%= @client.employee.lastname %></td>
+        
+                        </tr>
+                </tbody>
+            </table>
+    <% else %>
+        <p>No trainer added</p>
+    <% end %>
+    
+
+    <h3>Available trainers</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Add</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%= for trainer <- @employees do %>
+                <tr>
+                    <td><%= trainer.firstname%> <%= trainer.lastname%></td>
+                    <td><%= link "add", to: Routes.client_path(@conn, :add_employee, @client.id, trainer.id) %></td>
+                    
+                </tr>
+            <% end %>
+
+        </tbody>
+    </table>
+
+
+    <h3>Active training plans</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%= for training <- @added_trainingplans do %>
+                <tr>
+                    <td><%= training.name%></td>
+                    <td><%= link "remove", to: Routes.client_path(@conn, :remove_trainingplan, @client.id, training.id) %></td>
+                </tr>
+            <% end %> 
+        </tbody>
+    </table>
+
+    <h3>Available training plans</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%= for training <- @trainingplans_not_in_client do %>
+                <tr>
+                    <td><%= training.name%></td>
+                    <td><%= link "add", to: Routes.client_path(@conn, :add_trainingplan, @client.id, training.id) %></td>
+                </tr>
+            <% end %> 
+        </tbody>
+    </table>
+
+<% end %>

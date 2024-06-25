@@ -1,0 +1,136 @@
+[33mcommit 0d757d1a61dade7d59e33c46bd817be5ec4f1d18[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Patryk Piekarz <patryk.piekarz@student.ucll.be>
+Date:   Fri May 12 13:41:40 2023 +0200
+
+    employee adjusted
+
+[1mdiff --git a/apps/de_gym_app/lib/de_gym_app/employee_context/employee.ex b/apps/de_gym_app/lib/de_gym_app/employee_context/employee.ex[m
+[1mindex 75cbd5f..0f703dd 100644[m
+[1m--- a/apps/de_gym_app/lib/de_gym_app/employee_context/employee.ex[m
+[1m+++ b/apps/de_gym_app/lib/de_gym_app/employee_context/employee.ex[m
+[36m@@ -3,15 +3,10 @@[m [mdefmodule DeGymApp.EmployeeContext.Employee do[m
+   import Ecto.Changeset[m
+   alias DeGymApp.ClientContext.Client[m
+ [m
+[31m-  @acceptable_function ["Manager", "Trainer"][m
+[31m-[m
+   schema "employees" do[m
+     field :email, :string[m
+     field :firstname, :string[m
+[31m-    field :function, :string[m
+     field :lastname, :string[m
+[31m-    field :hashed_password, :string[m
+[31m-    field :password, :string, virtual: true[m
+     has_many :clients, Client[m
+   end[m
+ [m
+[36m@@ -20,10 +15,8 @@[m [mdefmodule DeGymApp.EmployeeContext.Employee do[m
+   @doc false[m
+   def changeset(employee, attrs) do[m
+     employee[m
+[31m-    |> cast(attrs, [:firstname, :lastname, :email, :password, :function])[m
+[31m-    |> validate_required([:firstname, :lastname, :email, :password, :function])[m
+[31m-    |> validate_inclusion(:function, @acceptable_function)[m
+[31m-    |> put_password_hash()[m
+[32m+[m[32m    |> cast(attrs, [:firstname, :lastname, :email])[m
+[32m+[m[32m    |> validate_required([:firstname, :lastname, :email])[m
+   end[m
+ [m
+   defp put_password_hash([m
+[1mdiff --git a/apps/de_gym_app/priv/repo/migrations/20230429153312_create_employees.exs b/apps/de_gym_app/priv/repo/migrations/20230429153312_create_employees.exs[m
+[1mindex 23f4b9a..7b6394b 100644[m
+[1m--- a/apps/de_gym_app/priv/repo/migrations/20230429153312_create_employees.exs[m
+[1m+++ b/apps/de_gym_app/priv/repo/migrations/20230429153312_create_employees.exs[m
+[36m@@ -6,8 +6,6 @@[m [mdefmodule DeGymApp.Repo.Migrations.CreateEmployees do[m
+       add :firstname, :string, null: false[m
+       add :lastname, :string, null: false[m
+       add :email, :string, null: false[m
+[31m-      add :hashed_password, :string, null: false[m
+[31m-      add :function, :string, null: false[m
+     end[m
+   end[m
+ end[m
+[1mdiff --git a/apps/de_gym_app_web/lib/de_gym_app_web/controllers/employee_controller.ex b/apps/de_gym_app_web/lib/de_gym_app_web/controllers/employee_controller.ex[m
+[1mindex 9b01a08..da06e60 100644[m
+[1m--- a/apps/de_gym_app_web/lib/de_gym_app_web/controllers/employee_controller.ex[m
+[1m+++ b/apps/de_gym_app_web/lib/de_gym_app_web/controllers/employee_controller.ex[m
+[36m@@ -11,8 +11,7 @@[m [mdefmodule DeGymAppWeb.EmployeeController do[m
+ [m
+   def new(conn, _params) do[m
+     changeset = EmployeeContext.change_employee(%Employee{})[m
+[31m-    functions = EmployeeContext.get_acceptable_function()[m
+[31m-    render(conn, "new.html", changeset: changeset, acceptable_functions: functions)[m
+[32m+[m[32m    render(conn, "new.html", changeset: changeset)[m
+   end[m
+ [m
+   def create(conn, %{"employee" => employee_params}) do[m
+[36m@@ -35,8 +34,7 @@[m [mdefmodule DeGymAppWeb.EmployeeController do[m
+   def edit(conn, %{"id" => id}) do[m
+     employee = EmployeeContext.get_employee!(id)[m
+     changeset = EmployeeContext.change_employee(employee)[m
+[31m-    functions = EmployeeContext.get_acceptable_function()[m
+[31m-    render(conn, "edit.html", employee: employee, changeset: changeset, acceptable_functions: functions)[m
+[32m+[m[32m    render(conn, "edit.html", employee: employee, changeset: changeset)[m
+   end[m
+ [m
+   def update(conn, %{"id" => id, "employee" => employee_params}) do[m
+[1mdiff --git a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/form.html.heex b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/form.html.heex[m
+[1mindex ef6ddf9..9e94669 100644[m
+[1m--- a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/form.html.heex[m
+[1m+++ b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/form.html.heex[m
+[36m@@ -17,14 +17,6 @@[m
+   <%= text_input f, :email %>[m
+   <%= error_tag f, :email %>[m
+ [m
+[31m-  <%= label f, :password %>[m
+[31m-  <%= text_input f, :password %>[m
+[31m-  <%= error_tag f, :password %>[m
+[31m-[m
+[31m-  <%= label f, :function %>[m
+[31m-  <%= select f, :function, @acceptable_functions %>[m
+[31m-  <%= error_tag f, :function %>[m
+[31m-[m
+   <div>[m
+     <%= submit "Save" %>[m
+   </div>[m
+[1mdiff --git a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/index.html.heex b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/index.html.heex[m
+[1mindex fe23778..5e9c897 100644[m
+[1m--- a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/index.html.heex[m
+[1m+++ b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/index.html.heex[m
+[36m@@ -6,7 +6,6 @@[m
+       <th>Firstname</th>[m
+       <th>Lastname</th>[m
+       <th>Email</th>[m
+[31m-      <th>Function</th>[m
+ [m
+       <th></th>[m
+     </tr>[m
+[36m@@ -17,7 +16,6 @@[m
+       <td><%= employee.firstname %></td>[m
+       <td><%= employee.lastname %></td>[m
+       <td><%= employee.email %></td>[m
+[31m-      <td><%= employee.function %></td>[m
+ [m
+       <td>[m
+         <span><%= link "Show", to: Routes.employee_path(@conn, :show, employee) %></span>[m
+[1mdiff --git a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/show.html.heex b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/show.html.heex[m
+[1mindex c50ac18..6bbe5f1 100644[m
+[1m--- a/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/show.html.heex[m
+[1m+++ b/apps/de_gym_app_web/lib/de_gym_app_web/templates/employee/show.html.heex[m
+[36m@@ -17,16 +17,6 @@[m
+     <%= @employee.email %>[m
+   </li>[m
+ [m
+[31m-  <li>[m
+[31m-    <strong>Password:</strong>[m
+[31m-    <%= @employee.password %>[m
+[31m-  </li>[m
+[31m-[m
+[31m-  <li>[m
+[31m-    <strong>Function:</strong>[m
+[31m-    <%= @employee.function %>[m
+[31m-  </li>[m
+[31m-[m
+ </ul>[m
+ [m
+ <span><%= link "Edit", to: Routes.employee_path(@conn, :edit, @employee) %></span> |[m
